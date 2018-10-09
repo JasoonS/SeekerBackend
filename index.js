@@ -8,32 +8,11 @@ const privateKeyProvider = require('./utils/privateKeyProviderEngine')
 const Promise = require('bluebird')
 var jwt    = require('jsonwebtoken')
 
-var MongoClient = require('mongodb').MongoClient
-
-var URL = 'mongodb://localhost:28000/seekers'
-
-// MongoClient.connect('mongodb://localhost:27017', (err,) => {
-  // Client returned
-// })
-MongoClient.connect(URL, (err, client) => {
-  console.log('in the mongo connect thing')
-  if (err) return
-
-  var db = client.db('mytestingdb')
-
-  var collection = db.collection('foods')
-  collection.insert({name: 'taco', tasty: true}, function(err, result) {
-    collection.find({name: 'taco'}).toArray(function(err, docs) {
-      console.log(docs[0])
-    })
-  })
-})
-
 // Config imports
 var config = require('./config')
 
 // Web3 setup
-var web3 = new Web3(new privateKeyProvider(config.private_key, 'http://localhost:7545')) //Genache for now make configurable
+var web3 = new Web3(new privateKeyProvider(config.private_key, config.rpc_address)) //Genache for now make configurable
 if (typeof web3.eth.getAccountsPromise === 'undefined') {
   Promise.promisifyAll(web3.eth, { suffix: 'Promise' })
 }
